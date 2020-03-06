@@ -1,0 +1,11 @@
+[Unit]
+Description=Gunicorn Server for SITENAME
+
+[Service]
+Restart=on-failure
+User=root
+WorkingDirectory=/root/sites/SITENAME/source
+ExecStart=/root/sites/superlists-staging.ottg.eu/virtualenv/bin/gunicorn --bind unix:/run/SITENAME.socket superlists.wsgi:application
+	
+[Install]
+WantedBy=multi-user.target
