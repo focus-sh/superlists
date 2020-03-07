@@ -4,6 +4,7 @@ from lists.views import home_page
 from django.http import HttpRequest
 from django.utils.html import escape
 from lists.models import Item, List
+from lists.forms import ItemForm
 
 class HomePageTest(TestCase):
 
@@ -14,8 +15,12 @@ class HomePageTest(TestCase):
 		self.assertTrue(html.startswith('<html>'))
 		self.assertIn('<title>To-Do lists</title>', html)
 		self.assertTrue(html.strip().endswith('</html>'))
-
 		self.assertTemplateUsed(response, 'home.html')
+
+	def test_home_page_uses_item_form(self):
+		response = self.client.get('/')
+		self.assertIsInstance(response.context['form'], ItemForm)
+
 
 
 class ListViewTest(TestCase):
