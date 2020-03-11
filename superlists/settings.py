@@ -25,7 +25,7 @@ SECRET_KEY = '0edud9z0=$fio#n+19)+_=6w@h2=mle25c!eibkens%i8!=+0w'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['superlists-staging.ottg.eu']
+ALLOWED_HOSTS = ['superlists-staging.ottg.eu', 'localhost']
 
 
 # Application definition
@@ -42,6 +42,9 @@ INSTALLED_APPS = [
 ]
 
 AUTH_USER_MODEL = 'accounts.User'
+AUTHENTICATION_BACKENDS = [
+    'accounts.authentication.PasswordlessAuthenticationBackend',
+]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -123,3 +126,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.abspath(os.path.join(BASE_DIR, '../static'))
+
+EMAIL_HOST = 'smtp.sina.com'
+EMAIL_HOST_USER = 'alert_weshare@sina.com'
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD')
+EMAIL_PORT = 25
+EMAIL_USE_TLS = False
