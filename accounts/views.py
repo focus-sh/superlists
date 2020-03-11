@@ -1,11 +1,9 @@
-import os
-import sys
 
 from django.contrib import messages, auth
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect
 from django.urls import reverse
-
+from django.contrib.auth import logout as django_logout
 from accounts.models import Token
 
 
@@ -17,7 +15,6 @@ def send_login_email(request):
         reverse('login') + '?token=' + str(token.uid)
     )
     message_body = f'Use this link to log in:\n\n{url}'
-    print('email password', os.environ.get('EMAIL_PASSWORD'))
     send_mail(
         'Your login link for Superlists',
         message_body,
@@ -37,4 +34,9 @@ def login(request):
     if user is not None:
         auth.login(request, user)
 
+    return redirect('/')
+
+
+def logout(request):
+    django_logout(request)
     return redirect('/')
