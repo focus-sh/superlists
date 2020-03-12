@@ -1,3 +1,6 @@
+from django.conf import settings
+from django.conf.urls.static import static
+
 from lists import views as list_views
 from lists import urls as list_urls
 from accounts import urls as account_urls
