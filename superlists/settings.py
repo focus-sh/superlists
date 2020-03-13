@@ -25,7 +25,7 @@ SECRET_KEY = '0edud9z0=$fio#n+19)+_=6w@h2=mle25c!eibkens%i8!=+0w'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['superlists-staging.ottg.eu']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -144,8 +144,14 @@ LOGGING = {
     'root': {'level': 'INFO'},
 }
 
-EMAIL_HOST = 'smtp.sina.com'
-EMAIL_HOST_USER = 'alert_weshare@sina.com'
+#EMAIL_HOST = 'smtp.sina.com'
+#EMAIL_HOST_USER = 'alert_weshare@sina.com'
+#EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD')
+#EMAIL_PORT = 25
+#EMAIL_USE_TLS = False
+
+EMAIL_HOST = 'smtp.126.com'
+EMAIL_HOST_USER = 'wangzhibin2013@126.com'
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD')
 EMAIL_PORT = 25
 EMAIL_USE_TLS = False

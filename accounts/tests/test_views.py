@@ -1,5 +1,6 @@
 from unittest.mock import patch, call
 
+from django.conf import settings
 from django.test import TestCase
 
 from accounts.models import Token
@@ -17,7 +18,7 @@ class SendLoginEmailViewTest(TestCase):
 
         (subject, body, from_email, to_list), kwargs = mock_send_mail.call_args
         self.assertEqual(subject, 'Your login link for Superlists')
-        self.assertEqual(from_email, 'alert_weshare@sina.com')
+        self.assertEqual(from_email, settings.EMAIL_HOST_USER)
         self.assertEqual(to_list, ['edith@example.com'])
 
     def test_adds_success_message(self):

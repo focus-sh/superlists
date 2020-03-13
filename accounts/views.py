@@ -1,4 +1,4 @@
-
+from django.conf import settings
 from django.contrib import messages, auth
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect
@@ -18,7 +18,7 @@ def send_login_email(request):
     send_mail(
         'Your login link for Superlists',
         message_body,
-        'alert_weshare@sina.com',
+        settings.EMAIL_HOST_USER,
         [email],
         fail_silently=False,
     )
