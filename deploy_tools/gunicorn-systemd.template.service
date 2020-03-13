@@ -4,8 +4,9 @@ Description=Gunicorn Server for SITENAME
 [Service]
 Restart=on-failure
 User=root
+Environment=EMAIL_PASSWORD=PWD
 WorkingDirectory=/home/focus-sh/sites/SITENAME/source
-ExecStart=/home/focus-sh/sites/superlists-staging.ottg.eu/virtualenv/bin/gunicorn --bind unix:/run/SITENAME.socket superlists.wsgi:application
+ExecStart=/home/focus-sh/sites/superlists-staging.ottg.eu/virtualenv/bin/gunicorn --bind unix:/run/SITENAME.socket --access-logfile ../access.log --error-logfile ../error.log superlists.wsgi:application
 	
 [Install]
 WantedBy=multi-user.target
