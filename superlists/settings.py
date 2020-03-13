@@ -25,7 +25,7 @@ SECRET_KEY = '0edud9z0=$fio#n+19)+_=6w@h2=mle25c!eibkens%i8!=+0w'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['superlists-staging.ottg.eu', 'localhost']
+ALLOWED_HOSTS = ['superlists-staging.ottg.eu']
 
 
 # Application definition

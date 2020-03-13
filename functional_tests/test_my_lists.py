@@ -1,8 +1,11 @@
 from django.conf import settings
 from django.contrib.auth import SESSION_KEY, BACKEND_SESSION_KEY, get_user_model
 from django.contrib.sessions.backends.db import SessionStore
+
 from functional_tests.base import FunctionalTest
+
 User = get_user_model()
+
 
 class MyListTest(FunctionalTest):
 
@@ -28,4 +31,3 @@ class MyListTest(FunctionalTest):
         self.create_pre_authenticated_session(email)
         self.browser.get(self.live_server_url)
         self.wait_to_be_logged_in(email)
-
