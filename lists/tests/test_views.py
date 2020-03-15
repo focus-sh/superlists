@@ -8,7 +8,7 @@ from django.utils.html import escape
 
 from lists.forms import ItemForm, ExistingListItemForm, EMPTY_ITEM_ERROR
 from lists.models import Item, List
-from lists.views import new_list2
+from lists.views import new_list
 
 User = get_user_model()
 
@@ -135,39 +135,10 @@ class NewListViewIntegratedTest(TestCase):
         new_item = Item.objects.first()
         self.assertEqual(new_item.text, 'A new list item')
 
-    def test_redirects_after_POST(self):
-        response = self.client.post('/lists/new', data={'text': 'A new list item'})
-        new_list = List.objects.first()
-        self.assertRedirects(response, f'/lists/{new_list.id}/')
-
-    def test_for_invalid_input_renders_home_template(self):
+    def test_for_invalid_input_doesnt_save_but_shows_errors(self):
         response = self.client.post('/lists/new', data={'text': ''})
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'home.html')
-
-    def test_validation_errors_are_shown_on_home_page(self):
-        response = self.client.post('/lists/new', data={'text': ''})
+        self.assertEqual(List.objects().count(), 0)
         self.assertContains(response, escape(EMPTY_ITEM_ERROR))
-
-    def test_for_invalid_input_passes_form_to_template(self):
-        response = self.client.post('/lists/new', data={'text': ''})
-        self.assertIsInstance(response.context['form'], ItemForm)
-
-    def test_invalid_list_items_arent_saved(self):
-        self.client.post('/lists/new', data={'text': ''})
-        self.assertEqual(List.objects.count(), 0)
-        self.assertEqual(Item.objects.count(), 0)
-
-    def test_my_lists_url_renders_my_lists_template(self):
-        User.objects.create(email='a@b.com')
-        response = self.client.get('/lists/users/a@b.com/')
-        self.assertTemplateUsed(response, 'my_lists.html')
-
-    def test_passes_correct_owner_to_template(self):
-        User.objects.create(email="wrong@owner.com")
-        correct_user = User.objects.create(email='a@b.com')
-        response = self.client.get('/lists/users/a@b.com/')
-        self.assertEqual(response.context['owner'], correct_user)
 
     def test_list_owner_is_saved_if_user_is_authenticated(self):
         user = User.objects.create(email='a@b.com')
@@ -187,7 +158,7 @@ class NewListViewUnitTest(unittest.TestCase):
 
     def test_passes_POST_data_to_NewListForm(self, mock_new_list_form):
         mock_new_list_form.return_value.save.return_value.get_absolute_url.return_value = 'id'
-        new_list2(self.request)
+        new_list(self.request)
         mock_new_list_form.assert_called_once_with(data=self.request.POST)
 
     def test_saves_form_with_owner_if_form_valid(self, mock_new_list_form):
@@ -195,7 +166,7 @@ class NewListViewUnitTest(unittest.TestCase):
         mock_form.is_valid.return_value = True
         mock_form.save.return_value.get_absolute_url.return_value = 'id'
 
-        new_list2(self.request)
+        new_list(self.request)
         mock_form.save.assert_called_once_with(owner=self.request.user)
 
     @patch('lists.views.redirect')
@@ -206,7 +177,7 @@ class NewListViewUnitTest(unittest.TestCase):
         mock_form.is_valid.return_value = True
         mock_form.save.return_value.get_absolute_url.return_value = 'item_id'
 
-        response = new_list2(self.request)
+        response = new_list(self.request)
 
         self.assertEqual(response, mock_redirect.return_value)
         mock_redirect.assert_called_once_with(mock_form.save.return_value)
@@ -218,7 +189,7 @@ class NewListViewUnitTest(unittest.TestCase):
         mock_form = mock_new_list_form.return_value
         mock_form.is_valid.return_value = False
 
-        response = new_list2(self.request)
+        response = new_list(self.request)
 
         self.assertEqual(response, mock_render.return_value)
         mock_render.assert_called_once_with(
@@ -228,5 +199,5 @@ class NewListViewUnitTest(unittest.TestCase):
     def test_does_not_save_if_form_invalid(self, mock_new_list_form):
         mock_form = mock_new_list_form.return_value
         mock_form.is_valid.return_value = False
-        new_list2(self.request)
+        new_list(self.request)
         self.assertFalse(mock_form.save.called)
